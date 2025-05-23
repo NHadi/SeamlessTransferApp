@@ -1,0 +1,13 @@
+# Start from the latest golang base image
+FROM golang:1.23-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -o account-service ./cmd/main.go
+
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/account-service .
+EXPOSE 8080
+CMD ["./account-service"] 

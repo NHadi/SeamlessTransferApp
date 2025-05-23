@@ -1,0 +1,438 @@
+{
+	"info": {
+		"_postman_id": "internal-transfers",
+		"name": "Internal Transfers API",
+		"description": "Collection for testing the internal transfers system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account Service",
+			"item": [
+				{
+					"name": "Account Management",
+					"item": [
+						{
+							"name": "Create Account",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{contentType}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": {{sourceAccountId}},\n    \"initial_balance\": \"{{initialBalance}}\"\n}"
+								},
+								"url": {
+									"raw": "{{accountServiceUrl}}/accounts",
+									"host": ["{{accountServiceUrl}}"],
+									"path": ["accounts"]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"account_id\": {{sourceAccountId}},\n    \"initial_balance\": \"{{initialBalance}}\"\n}"
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json"
+								},
+								{
+									"name": "Invalid Amount",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"account_id\": {{sourceAccountId}},\n    \"initial_balance\": \"-{{initialBalance}}\"\n}"
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"amount cannot be negative\"\n}"
+								},
+								{
+									"name": "Account Already Exists",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"account_id\": {{sourceAccountId}},\n    \"initial_balance\": \"{{initialBalance}}\"\n}"
+										}
+									},
+									"status": "Conflict",
+									"code": 409,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"account already exists\"\n}"
+								},
+								{
+									"name": "Invalid Account ID",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"account_id\": 0,\n    \"initial_balance\": \"{{initialBalance}}\"\n}"
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"invalid account ID\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Get Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{accountServiceUrl}}/accounts/{{sourceAccountId}}",
+									"host": ["{{accountServiceUrl}}"],
+									"path": ["accounts", "{{sourceAccountId}}"]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"account_id\": {{sourceAccountId}},\n    \"balance\": \"{{initialBalance}}\"\n}"
+								},
+								{
+									"name": "Account Not Found",
+									"originalRequest": {
+										"method": "GET"
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"account not found\"\n}"
+								},
+								{
+									"name": "Invalid Account ID",
+									"originalRequest": {
+										"method": "GET"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"invalid account ID\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transaction Service",
+			"item": [
+				{
+					"name": "Transaction Management",
+					"item": [
+						{
+							"name": "Create Transaction",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{contentType}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": {{destinationAccountId}},\n    \"amount\": \"{{transferAmount}}\"\n}"
+								},
+								"url": {
+									"raw": "{{transactionServiceUrl}}/transactions",
+									"host": ["{{transactionServiceUrl}}"],
+									"path": ["transactions"]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": {{destinationAccountId}},\n    \"amount\": \"{{transferAmount}}\"\n}"
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json"
+								},
+								{
+									"name": "Insufficient Balance",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": {{destinationAccountId}},\n    \"amount\": \"1000.00\"\n}"
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"insufficient balance\"\n}"
+								},
+								{
+									"name": "Same Account Transfer",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": {{sourceAccountId}},\n    \"amount\": \"{{transferAmount}}\"\n}"
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"source and destination accounts must be different\"\n}"
+								},
+								{
+									"name": "Invalid Amount",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": {{destinationAccountId}},\n    \"amount\": \"-{{transferAmount}}\"\n}"
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"amount cannot be negative\"\n}"
+								},
+								{
+									"name": "Source Account Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source_account_id\": 999,\n    \"destination_account_id\": {{destinationAccountId}},\n    \"amount\": \"{{transferAmount}}\"\n}"
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"source account not found\"\n}"
+								},
+								{
+									"name": "Destination Account Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": 999,\n    \"amount\": \"{{transferAmount}}\"\n}"
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"destination account not found\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Get Transaction",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{transactionServiceUrl}}/transactions/1",
+									"host": ["{{transactionServiceUrl}}"],
+									"path": ["transactions", "1"]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"id\": 1,\n    \"source_account_id\": {{sourceAccountId}},\n    \"destination_account_id\": {{destinationAccountId}},\n    \"amount\": \"{{transferAmount}}\",\n    \"status\": \"complete\",\n    \"created_at\": \"2024-02-20T10:00:00Z\",\n    \"updated_at\": \"2024-02-20T10:00:00Z\"\n}"
+								},
+								{
+									"name": "Transaction Not Found",
+									"originalRequest": {
+										"method": "GET"
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"transaction not found\"\n}"
+								},
+								{
+									"name": "Invalid Transaction ID",
+									"originalRequest": {
+										"method": "GET"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "{{contentType}}"
+										}
+									],
+									"body": "{\n    \"error\": \"invalid transaction ID\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8088",
+			"type": "string"
+		},
+		{
+			"key": "contentType",
+			"value": "application/json",
+			"type": "string"
+		},
+		{
+			"key": "sourceAccountId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "destinationAccountId",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "initialBalance",
+			"value": "1000.00",
+			"type": "string"
+		},
+		{
+			"key": "transferAmount",
+			"value": "100.00",
+			"type": "string"
+		}
+	]
+}

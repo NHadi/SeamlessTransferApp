@@ -1,0 +1,83 @@
+basePath: /
+definitions:
+  http.AccountResponse:
+    properties:
+      account_id:
+        type: integer
+      balance:
+        type: string
+    type: object
+  http.CreateAccountRequest:
+    properties:
+      account_id:
+        type: integer
+      initial_balance:
+        type: string
+    required:
+    - account_id
+    - initial_balance
+    type: object
+  http.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Account service for internal transfers system
+  title: Account Service API
+  version: "1.0"
+paths:
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: Create a new account with initial balance
+      parameters:
+      - description: Account creation request
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/http.CreateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/http.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Create a new account
+      tags:
+      - accounts
+  /accounts/{account_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get account details by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: account_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.AccountResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Get account details
+      tags:
+      - accounts
+swagger: "2.0"

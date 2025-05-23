@@ -1,0 +1,97 @@
+definitions:
+  http.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  http.SubmitTransactionRequest:
+    properties:
+      amount:
+        type: string
+      destination_account_id:
+        type: integer
+      source_account_id:
+        type: integer
+    required:
+    - amount
+    - destination_account_id
+    - source_account_id
+    type: object
+  http.TransactionResponse:
+    properties:
+      amount:
+        type: string
+      destination_account_id:
+        type: integer
+      id:
+        type: integer
+      source_account_id:
+        type: integer
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      description: Submit a new transaction between accounts
+      parameters:
+      - description: Transaction details
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/http.SubmitTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Submit a new transaction
+      tags:
+      - transactions
+  /transactions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a specific transaction
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Get transaction details
+      tags:
+      - transactions
+swagger: "2.0"
