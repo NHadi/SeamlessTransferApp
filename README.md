@@ -31,7 +31,7 @@ A microservices-based system for handling internal financial transfers between a
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/NHadi/SeamlessTransferApp
 cd internal-transfers
 ```
 
